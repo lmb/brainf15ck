@@ -26,4 +26,5 @@ Bugs
 ---
 
 `brainf15ck` does not check for over- / underflows of memory and program
-buffers. This is left as an excercise to the reader :)
+buffers. Also, nested loops are not supported (thanks for reporting this
+@rdebath!)This is left as an excercise to the reader :)

@@ -9,33 +9,25 @@
 
 const char* load(const char* filename, size_t* length);
 
-uint8_t* execute_opcode(const char** opcode, uint8_t* ptr)
+void execute(const char* pc, size_t length)
 {
-	switch (**opcode) {
-		case '>': return ++ptr;
-		case '<': return --ptr;
-		case '+': *ptr += 1; break;
-		case '-': *ptr -= 1; break;
-		case '.': putchar((char)*ptr); break;
-		case ',': *ptr = getchar(); break;
-		case '[': while (!*ptr && **opcode != ']') { (*opcode)++; }; break;
-		case ']': while (**opcode != '[') { (*opcode)--; }; (*opcode)--; break;
-		default: break;
-	}
-
-	return ptr;
-}
-
-void execute(const char* program, size_t length)
-{
-	const char* end = program + length;
-	const char* pc = program;
+	const char* end = pc + length;
 
 	uint8_t  memory[1024]= {0};
 	uint8_t* ptr = memory;
 
 	while (pc < end) {
-		ptr = execute_opcode(&pc, ptr);
+		switch (*pc) {
+			case '>': ++ptr; break;
+			case '<': --ptr; break;
+			case '+': *ptr += 1; break;
+			case '-': *ptr -= 1; break;
+			case '.': putchar((char)*ptr); break;
+			case ',': *ptr = getchar(); break;
+			case '[': while (!*ptr && *pc != ']') { pc++; }; break;
+			case ']': while (*pc != '[') { pc--; }; continue;
+			default: break;
+		}
 		pc++;
 	}
 }
