@@ -7,14 +7,25 @@
 #include <fcntl.h>
 #include <unistd.h>
 
-const char* load(const char* filename, size_t* length);
+static const char* load(const char* filename, size_t* length);
 
-void execute(const char* pc, size_t length)
+static int is_loop_op(char opcode)
+{
+	switch (opcode) {
+		case '[': return 1;
+		case ']': return -1;
+		default:  return 0;
+	}
+}
+
+static void execute(const char* pc, size_t length)
 {
 	const char* end = pc + length;
 
 	uint8_t  memory[1024]= {0};
 	uint8_t* ptr = memory;
+
+	int n;
 
 	while (pc < end) {
 		switch (*pc) {
@@ -24,8 +35,12 @@ void execute(const char* pc, size_t length)
 			case '-': *ptr -= 1; break;
 			case '.': putchar((char)*ptr); break;
 			case ',': *ptr = getchar(); break;
-			case '[': while (!*ptr && *pc != ']') { pc++; }; break;
-			case ']': while (*pc != '[') { pc--; }; continue;
+			case '[':
+				if (!*ptr) for (n = 1; n != 0; n += is_loop_op(*(++pc)));
+				break;
+			case ']':
+				for (n = 1; n != 0; n -= is_loop_op(*(--pc)));
+				continue;
 			default: break;
 		}
 		pc++;
@@ -54,7 +69,7 @@ int main(int argc, const char** argv)
 	return 0;
 }
 
-const char* load(const char* filename, size_t* length)
+static const char* load(const char* filename, size_t* length)
 {
 	int fd;
 	struct stat stat;
