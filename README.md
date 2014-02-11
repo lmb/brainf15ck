@@ -25,6 +25,5 @@ There is a Hello World included, shamelessly stolen from [Wikipedia](http://en.w
 Bugs
 ---
 
-`brainf15ck` does not check for over- / underflows of memory and program
-buffers. Also, nested loops are not supported (thanks for reporting this
-@rdebath!)This is left as an excercise to the reader :)
+`brainf15ck` does not check for over- / underflows of memory. Fixing this is
+left as an excercise to the reader :)

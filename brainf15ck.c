@@ -18,16 +18,17 @@ static int is_loop_op(char opcode)
 	}
 }
 
-static void execute(const char* pc, size_t length)
+static void execute(const char* program, size_t length)
 {
-	const char* end = pc + length;
+	const char* end = program + length;
+	const char* pc = program;
 
-	uint8_t  memory[1024]= {0};
+	uint8_t  memory[1024] = {0};
 	uint8_t* ptr = memory;
 
 	int n;
 
-	while (pc < end) {
+	while (program <= pc && pc < end) {
 		switch (*pc) {
 			case '>': ++ptr; break;
 			case '<': --ptr; break;
@@ -43,6 +44,7 @@ static void execute(const char* pc, size_t length)
 				continue;
 			default: break;
 		}
+
 		pc++;
 	}
 }
